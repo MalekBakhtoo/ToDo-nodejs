@@ -11,8 +11,9 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
     <link rel="stylesheet" href="/css/main.css">
     <title>Frontend Mentor | Todo app</title>
-    <!-- <script src="./scripts/main(normal).js" defer></script> -->
-    <script src="/scripts/app(class).js" defer></script>
+    <script src="./scripts/main(normal).js" defer ></script>
+
+    <!-- <script src="/scripts/app(class).js" defer></script> -->
     <!-- <script src="./scripts/script(constructorFunction).js" defer></script> -->
 </head>
 
@@ -23,13 +24,14 @@
                 <h1>Todo</h1>
                 <button class="btn theme-btn light"><img src="./images/icon-moon.svg" alt="moon svg"></button>
             </header>
-            <form>
+            <form action="/todo" method="post">
                 <span class="round"></span>
-                <input type="text" id="todo-input" placeholder="Create a new todo...">
-                <button class="add-todo">+</button>
+                <input type="text" id="todo-input" placeholder="Create a new todo..." name="title">
+                <button class="add-todo" type="submit">+</button>
             </form>
             <div class="todo-container">
                 <ul class="todos">
+                      
                 </ul>
                 <div class="actions">
                     <p class="left-items"><span id="count">0</span> items left</p>

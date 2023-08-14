@@ -68,13 +68,13 @@ function toggleEmptyContainer() {
 }
 
 // generating todo item template
-function todoGenerator(text) {
+function todoGenerator(text, conditon = false) {
     const todoItem = document.createElement('div');
     todoItem.className = 'todo-item';
     todoItem.draggable = true;
     todoItem.innerHTML = `
                         <label class="check-label">
-                            <input type="checkbox">
+                            <input type="checkbox" onChange="submitCondition(this)" value="${text}">
                             <span class="check-round"></span>
                         </label>
                         <li class="todo">${text}</li>
@@ -84,6 +84,10 @@ function todoGenerator(text) {
     const label = todoItem.querySelector('label');
     const li = todoItem.querySelector('li');
     const button = todoItem.querySelector('button');
+    if (conditon) {
+        label.querySelector('input').checked = true;
+        todoItem.classList.add('strike');
+    }
 
     return [todoItem, label, li, button];
 }
@@ -97,12 +101,117 @@ function activeTodoCount() {
     count.textContent = activeCount;
 }
 
+function submitCondition(e) {
+    const title = e.value;
+    const xmlHttp = new XMLHttpRequest();
+    xmlHttp.onload = function () {
+        window.alert("change apply on " + title);
+    }
+    xmlHttp.open('POST', '/todo/conditon');
+    xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlHttp.send('title=' + title);
+}
+
+function getTodosForLoad() {
+    const xmlHttp = new XMLHttpRequest();
+    xmlHttp.open('GET', '/todo/data');
+    xmlHttp.send();
+
+    xmlHttp.onload = function () {
+        let tasks = xmlHttp.responseText;
+        tasks = JSON.parse(tasks);
+
+        for (let task of tasks) {
+            const text = task.title;
+            if (text === '') return;
+            const [todoItem, checkLabel, todoLi, deleteBtn] = todoGenerator(text, task.isDone);
+
+            // adding todo
+            todoUl.append(todoItem);
+            toggleEmptyContainer();
+            activeTodoCount()
+
+            // event delegation is used here.
+            todoItem.addEventListener('click', e => {
+                if (e.target === checkLabel || checkLabel.querySelector('span') || checkLabel.querySelector('input')) {
+                    if (checkLabel.querySelector('input').checked) {
+                        todoItem.classList.add('strike');
+                        activeTodoCount();
+                    } else {
+                        todoItem.classList.remove('strike');
+                        activeTodoCount();
+                    }
+                }
+                // Here "e.currentTarget" and "this" refers to the addTodoBtn.
+                // It's because we are adding eventlistener to the todoItem
+                // which is generated inside of the addTodoBtn's event handler
+                // That's why i'm using e.target.closest('div.todo-item') to get the result without a bug.
+                // console.log(e.target)
+
+                if (e.target === todoLi) {
+                    if (e.target.closest('div.todo-item').classList.contains('strike')) {
+                        e.target.closest('div.todo-item').classList.remove('strike');
+                        checkLabel.querySelector('input').checked = false;
+                        activeTodoCount();
+                    } else {
+                        e.target.closest('div.todo-item').classList.add('strike');
+                        checkLabel.querySelector('input').checked = true;
+                        activeTodoCount();
+                    }
+                }
+
+                if (e.target === deleteBtn || e.target === deleteBtn.querySelector('img')) {
+                    let title;
+                    if (e.target === deleteBtn) {
+                        title = e.target.parentElement.children[1].innerHTML;
+                    } else {
+                        title = e.target.parentElement.parentElement.children[1].innerHTML;
+                    }
+                    const xmlHttp = new XMLHttpRequest();
+                    xmlHttp.open('POST', '/todo/delete');
+                    xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xmlHttp.send('title=' + title);
+                    e.target.closest('div.todo-item').classList.add('slide');
+                    e.target.closest('div.todo-item').addEventListener('animationend', removeTodo.bind(this, todoItem));
+                }
+            });
+
+            todoItem.addEventListener('dragstart', e => {
+                console.log('dragstart');
+                todoItem.classList.add('ondrag');
+            });
+
+            todoItem.addEventListener('dragend', e => {
+                console.log('dragend');
+                todoItem.classList.remove('ondrag');
+            });
+
+            todoUl.addEventListener('dragover', e => {
+                e.preventDefault();
+                const afterElement = getDragAfterElement(todoUl, e.clientY)
+                const draggable = document.querySelector('.ondrag')
+                if (afterElement == null) {
+                    todoUl.appendChild(draggable)
+                } else {
+                    todoUl.insertBefore(draggable, afterElement)
+                }
+            });
+        }
+    }
+}
+getTodosForLoad();
 // Adding todo
 function addTodo(e) {
+
     e.preventDefault();
+
     // getting input text
     const text = todoInput.value;
     if (text === '') return;
+    const xmlHttp = new XMLHttpRequest();
+    xmlHttp.open('POST', '/todo');
+    xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlHttp.send('title=' + text);
     const [todoItem, checkLabel, todoLi, deleteBtn] = todoGenerator(text);
 
     // adding todo
@@ -143,6 +252,12 @@ function addTodo(e) {
         }
 
         if (e.target === deleteBtn || e.target === deleteBtn.querySelector('img')) {
+
+            let title = text;
+            const xmlHttp = new XMLHttpRequest();
+            xmlHttp.open('POST', '/todo/delete');
+            xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlHttp.send('title=' + title);
             e.target.closest('div.todo-item').classList.add('slide');
             e.target.closest('div.todo-item').addEventListener('animationend', removeTodo.bind(this, todoItem));
         }
