@@ -104,9 +104,6 @@ function activeTodoCount() {
 function submitCondition(e) {
     const title = e.value;
     const xmlHttp = new XMLHttpRequest();
-    xmlHttp.onload = function () {
-        window.alert("change apply on " + title);
-    }
     xmlHttp.open('POST', '/todo/conditon');
     xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xmlHttp.send('title=' + title);
