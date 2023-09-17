@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+        </script>
+    <style>
+        textarea:focus,
+        input:focus {
+            outline: none;
+        }
+    </style>
+</head>
+
+<body>
+    <section style="background-color: #eee;">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col">
+                    <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="/todo">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">User Profile</li>
+                        </ol>
+                    </nav>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-body text-center">
+                            <a href="/user/uploadImage"><img src="<%= user.image%>"
+                                alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"></a>
+                            <h5 class="my-3">
+                                <%= user.name %>
+                            </h5>
+                            
+                            <p class="text-muted mb-4"><%= user.address %></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <form class="card-body" method="post" action="/user/profileUpdate">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Full Name</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input name="name" type="text" class="text-muted mb-0" value="<%= user.name %>"
+                                        style="border: none;">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Email</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input name="email" disabled type="email" class="text-muted mb-0" value="<%= user.email %>"
+                                        style="border: none;">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Phone</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input name="phone" class="text-muted mb-0" value="<%= user.phone %>" style="border: none;">
+
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Mobile</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input name="mobile" class="text-muted mb-0" value="<%= user.mobile %>" style="border: none;">
+
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Address</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input name="address" class="text-muted mb-0" value="<%= user.address %>" style="border: none;">
+
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row d-flex justify-content-around">
+                                <input id="submitbtn" class="btn bg-success col-sm-2" type="submit" value="Update">
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+                <div class="row">
+                    <a href="/user/logout"><input  class="btn bg-danger col-sm-2"  value="logout"></a>
+                    
+                </div>
+                <div class="row">
+                    <a href="/user/changePassword"><input  class="btn bg-warning col-sm-2"  value="Change Password"></a>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="/scripts/profile.js"></script>
+</body>
+
+</html>

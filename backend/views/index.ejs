@@ -11,18 +11,25 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
     <link rel="stylesheet" href="/css/main.css">
     <title>Todo app</title>
-    <script src="./scripts/main(normal).js" defer ></script>
+    <script src="./scripts/main(normal).js" defer></script>
+
 
     <!-- <script src="/scripts/app(class).js" defer></script> -->
     <!-- <script src="./scripts/script(constructorFunction).js" defer></script> -->
 </head>
 
 <body>
+
     <main>
+
         <section class="wrapper">
+
             <header>
+                <a href="/user/profile"><img src="./images/user.jpg"
+                        style="height: 40px;width: 40px; border-radius: 50%;" alt=""></a>
                 <h1>Todo</h1>
                 <button class="btn theme-btn light"><img src="./images/icon-moon.svg" alt="moon svg"></button>
+
             </header>
             <form action="/todo" method="post">
                 <span class="round"></span>
@@ -31,7 +38,7 @@
             </form>
             <div class="todo-container">
                 <ul class="todos">
-                      
+
                 </ul>
                 <div class="actions">
                     <p class="left-items"><span id="count">0</span> items left</p>
