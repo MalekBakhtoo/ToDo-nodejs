@@ -6,6 +6,7 @@ module.exports = function (req ,res , next  ){;
     if(!token) return res.status(401).render('user/login' , {error : "please login"});
     try{
         const verify = jwt.verify(token , 'privateKey');
+        
         res.cookie('user' , verify);
         next();
     }catch(ex){

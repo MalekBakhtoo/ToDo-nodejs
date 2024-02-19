@@ -32,7 +32,7 @@ Router.get('/emailVerify/:token', async (req, res) => {
 
     try {
         const token = req.params.token;
-        const verify = jwt.verify(token, 'privateKey');
+        const verify = await jwt.verify(token, 'privateKey');
         let user = await new userModel(verify);
         await user.save();
         res.cookie('jwt', user.genereatJwt(), {
@@ -99,7 +99,7 @@ Router.get('/changePassword', auth, async (req, res) => {
 Router.get('/changeMyPassword/:token', async (req, res) => {
     try {
         const token = req.params.token;
-        const verify = jwt.verify(token, 'privateKey');
+        const verify = await jwt.verify(token, 'privateKey');
         res.cookie('emailedtoken', verify);
         res.render('user/changePassword', { error: null });
 
@@ -118,7 +118,7 @@ Router.post('/changeMyPassword', async (req, res) => {
     const hashedPassword = await bcrypt.hash(newPassword, salt);
     const user = await userModel.findOne({ email: email });
     await user.updateOne({ password: hashedPassword });
-    res.redirect('/login')
+    res.redirect('./login');
 });
 Router.get('/profile', auth, async (req, res) => {
     const email = req.cookies.user.email;
